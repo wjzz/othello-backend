@@ -1,0 +1,11 @@
+- [ ] Front-end
+ - [ ] project setup
+
+- [ ] Back-end
+  - [ ] api setup (spring boot)
+  - [ ] Make move
+    - [x] main procedure
+    - [ ] test cases
+  - [x] Legal move generation
+    - [x] move generation
+    - [x] test cases
