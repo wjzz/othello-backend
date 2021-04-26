@@ -207,6 +207,26 @@ class PositionSpec extends Specification {
             moves == []
     }
 
+    def "the generated legal moves are correct: no moves 2"() {
+        given:
+            def pos_str = """\
+            . . . . . . . .
+            . . . . . . . .
+            . . . . . . . .
+            . O . . X . . .
+            . O . X O X . .
+            . O . . X . . .
+            . . . . . . . .
+            . . . . . . . .
+            """
+            def pos = Position.fromString(pos_str)
+
+        when:
+            def moves = pos.legalMoves().sort()
+        then:
+            moves == []
+    }
+
     //--------------------------------------------------------
     // Make move
     //--------------------------------------------------------
@@ -242,6 +262,76 @@ class PositionSpec extends Specification {
             pos.toString() == result.stripIndent()
     }
 
+    //--------------------------------------------------------
+    // Playing the game
+    //--------------------------------------------------------
+
+    def "generateStatus for game in progress"() {
+        given:
+            def pos_str = """\
+            . . . . . . . .
+            . . . . . . . .
+            . . . . . . . .
+            . . . O X . . .
+            . . . X O . . .
+            . . . . . . . .
+            . . . . . . . .
+            . . . . . . . .
+            """
+            def pos = Position.fromString(pos_str)
+
+        when:
+            def status = pos.generateStatus()
+        then:
+            status.result == ""
+            status.moves.sort() == [D3, C4, F5, E6]
+            status.is_pass == false
+    }
+
+    def "generateStatus for X pass"() {
+        given:
+            def pos_str = """\
+            . . . . . . . .
+            . . . . . . . .
+            . . . . . . . .
+            . O . . X . . .
+            . O . X O X . .
+            . O . . X . . .
+            . . . . . . . .
+            . . . . . . . .
+            """
+            def pos = Position.fromString(pos_str)
+
+        when:
+            def status = pos.generateStatus()
+        then:
+            status.result == ""
+            status.is_pass == true
+            // moves for next player after pass
+            status.moves.sort() == [E3, C5, G5, E7]
+    }
+
+     def "generateStatus for finished game"() {
+        given:
+            def pos_str = """\
+            . . . . . . . .
+            . . . . . . . .
+            . O . . . . . .
+            . O . . X . . .
+            . O . X X X X .
+            . O . . X . . .
+            . . . . . . . .
+            . . . . . . . .
+            """
+            def pos = Position.fromString(pos_str)
+
+        when:
+            def status = pos.generateStatus()
+        then:
+            status.result == "X wins | X=6 vs O=4"
+            status.is_pass == false
+            status.moves.sort() == []
+    }
 }
 
 class MoveGeneratorSpec extends Specification {

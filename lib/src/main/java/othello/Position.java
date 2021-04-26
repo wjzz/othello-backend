@@ -129,8 +129,51 @@ public class Position {
         return board[index];
     }
 
+    public String calculateResult() {
+        int X = 0;
+        int O = 0;
+
+        for (Square square : board) {
+            if (square == Square.X)
+                X++;
+            else if (square == Square.O)
+                O++;
+        }
+        if (X == O)
+            return "draw";
+
+        String winner = X > O ? "X" : "O";
+        return String.format("%s wins | X=%d vs O=%d",
+            winner, X, O);
+    }
+
+    public Status generateStatus() {
+        final List<Field> moves = legalMoves();
+        if (moves.size() > 0) {
+            return Status.MovesAvailable(moves);
+        }
+
+        // current player has to pass, try to change color
+        final List<Field> moves_after_pass = legalMovesAfterPass();
+        if (moves_after_pass.size() > 0) {
+            this.to_move = this.to_move.opposite();
+            return Status.OneSidedPass(moves_after_pass);
+        }
+
+        final String result = calculateResult();
+        return Status.GameFinished(result);
+    }
+
+    private List<Field> generateMoves(Color to_move) {
+        return new MoveGenerator(to_move, this.board).legalMoves();
+    }
+
+    private List<Field> legalMovesAfterPass() {
+        return generateMoves(this.to_move.opposite());
+    }
+
     public List<Field> legalMoves() {
-        return new MoveGenerator(to_move, board).legalMoves();
+        return generateMoves(this.to_move);
     }
 
     public void makeMove(Field move) {

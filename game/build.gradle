@@ -1,0 +1,14 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+version = '0.1'
+
+dependencies {
+    implementation project(':lib')
+}
+
+application {
+    mainClass = 'othello.game.Game'
+}
