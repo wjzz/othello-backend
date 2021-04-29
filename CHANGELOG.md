@@ -11,3 +11,9 @@
 2021-04-23
 - wrote tests for the move generator, found 1 bug
 - implemented `make_move`
+
+2021-04-26~28
+- added simple computer players
+
+2021-04-29
+ - finished basic API

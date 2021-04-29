@@ -10,6 +10,12 @@ public enum Color {
             return Square.O;
     }
 
+    public Color valueOfString(String ascii) {
+        assert ascii == "X" || ascii == "O";
+
+        return ascii == "X" ? Color.X : Color.O;
+    }
+
     public Color opposite() {
         if (this == X)
             return Color.O;

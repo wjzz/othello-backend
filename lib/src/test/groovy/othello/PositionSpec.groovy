@@ -283,9 +283,10 @@ class PositionSpec extends Specification {
         when:
             def status = pos.generateStatus()
         then:
-            status.result == ""
+            status.difference == 0
             status.moves.sort() == [D3, C4, F5, E6]
             status.is_pass == false
+            status.winner == null
     }
 
     def "generateStatus for X pass"() {
@@ -305,10 +306,11 @@ class PositionSpec extends Specification {
         when:
             def status = pos.generateStatus()
         then:
-            status.result == ""
+            status.difference == 0
             status.is_pass == true
             // moves for next player after pass
             status.moves.sort() == [E3, C5, G5, E7]
+            status.winner == null
     }
 
      def "generateStatus for finished game"() {
@@ -328,9 +330,10 @@ class PositionSpec extends Specification {
         when:
             def status = pos.generateStatus()
         then:
-            status.result == "X wins | X=6 vs O=4"
+            status.difference == 2
             status.is_pass == false
             status.moves.sort() == []
+            status.winner == Color.X
     }
 }
 

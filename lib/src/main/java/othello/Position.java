@@ -4,54 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-enum Square {
-    EMPTY, X, O;
-
-    @Override
-    public String toString() {
-        switch (this) {
-            case EMPTY: return ".";
-            case X: return "X";
-            case O: return "O";
-            default: return "IMPOSSIBLE CASE";
-        }
-    }
-
-    public static Square fromChar(Character ascii) {
-        assert ascii == '.' || ascii == 'X' || ascii == 'O';
-
-        if (ascii == 'X')
-            return Square.X;
-        if (ascii == 'O')
-            return Square.O;
-        return Square.EMPTY;
-    }
-
-    public Square flip() {
-        if (this == Square.EMPTY) {
-            return Square.EMPTY;
-        } else if (this == Square.X) {
-            return Square.O;
-        } else {
-            return Square.X;
-        }
-    }
-
-    public Color toColor() {
-        assert this != EMPTY;
-
-        switch(this) {
-            case X:
-                return Color.X;
-            case O:
-                return Color.O;
-            case EMPTY:
-            default:
-                return null;
-        }
-    }
-}
-
 public class Position {
     public final static int ROWS = 8;
     public final static int COLS = 8;
@@ -69,18 +21,12 @@ public class Position {
         board[4*8+3] = board[3*8+4] = Square.X;
     }
 
-    private Position(Square[] board) {
+    private Position(Square[] board, Color to_move) {
         assert board.length == FIELDS;
+        assert to_move != null;
 
         this.board = board;
-
-        int played_moves = 0;
-        for (Square square : board) {
-            assert square != null;
-            if (square != Square.EMPTY)
-                played_moves++;
-        }
-        this.to_move = (played_moves % 2 == 0) ? Color.X : Color.O;
+        this.to_move = to_move;
     }
 
     // Factory methods
@@ -89,7 +35,11 @@ public class Position {
         return new Position();
     }
 
-    public static Position fromString(String ascii) {
+    public Square[] getBoard() {
+        return board;
+    }
+
+    public static Position fromString(String ascii, Color to_move) {
         Square[] board = ascii
             .chars()
             .mapToObj(c -> (char) c)
@@ -100,7 +50,13 @@ public class Position {
 
         assert board.length == FIELDS;
 
-        return new Position(board);
+        return new Position(board, to_move);
+    }
+
+    public Position copy() {
+        Position pos = Position.fromString(this.toString(), this.to_move);
+        pos.to_move = this.to_move;
+        return pos;
     }
 
     // Normal methods
@@ -129,7 +85,7 @@ public class Position {
         return board[index];
     }
 
-    public String calculateResult() {
+    private int calculateDifference() {
         int X = 0;
         int O = 0;
 
@@ -139,12 +95,30 @@ public class Position {
             else if (square == Square.O)
                 O++;
         }
-        if (X == O)
+        return X - O;
+    }
+
+    public String formatResult(int difference) {
+        if (difference == 0)
             return "draw";
 
-        String winner = X > O ? "X" : "O";
+        // X + O == 64
+        // X - O == difference
+        int X = (FIELDS + difference) / 2;
+        int O = FIELDS - X;
+
+        String winner = difference > 0 ? "X" : "O";
         return String.format("%s wins | X=%d vs O=%d",
             winner, X, O);
+    }
+
+    private Color getWinner(int difference) {
+        if (difference == 0)
+            return null;
+        if (difference > 0)
+            return Color.X;
+        else
+            return Color.O;
     }
 
     public Status generateStatus() {
@@ -156,12 +130,12 @@ public class Position {
         // current player has to pass, try to change color
         final List<Field> moves_after_pass = legalMovesAfterPass();
         if (moves_after_pass.size() > 0) {
-            this.to_move = this.to_move.opposite();
             return Status.OneSidedPass(moves_after_pass);
         }
 
-        final String result = calculateResult();
-        return Status.GameFinished(result);
+        int difference = calculateDifference();
+        final Color winner = getWinner(difference);
+        return Status.GameFinished(difference, winner);
     }
 
     private List<Field> generateMoves(Color to_move) {
@@ -176,6 +150,19 @@ public class Position {
         return generateMoves(this.to_move);
     }
 
+    public void makePass() {
+        this.to_move = this.to_move.opposite();
+    }
+
+    public Position applyMove(Field move) {
+        Position result = this.copy();
+        result.makeMove(move);
+
+        assert result.to_move == this.to_move.opposite();
+
+        return result;
+    }
+
     public void makeMove(Field move) {
         List<Integer> to_flip = new MoveGenerator(to_move, board).makeMove(move);
 
@@ -185,6 +172,17 @@ public class Position {
 
         board[move.toIndex()] = to_move.toSquare();
         to_move = to_move.opposite();
+    }
+
+    public String toAscii() {
+        String result = "";
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; ++col) {
+                Square square = board[row*8 + col];
+                result += square.toString();
+            }
+        }
+        return result;
     }
 
     @Override

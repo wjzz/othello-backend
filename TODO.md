@@ -1,11 +1,21 @@
-- [ ] Front-end
- - [ ] project setup
+- Front-end
+ - [x] project setup
+ - [x] basic position display
+ - [ ] pass
+ - [ ] result display
+ - [ ] end of game detection
 
-- [ ] Back-end
-  - [ ] api setup (spring boot)
-  - [ ] Make move
+- Back-end
+  - [x] api setup (spring boot)
+    - [x] legal moves
+    - [x] make move
+  - [x] Make move
     - [x] main procedure
-    - [ ] test cases
+    - [x] test cases
   - [x] Legal move generation
     - [x] move generation
     - [x] test cases
+  - [ ] Computer player
+     - [x] random mover
+     - [x] trivial square evaluator
+     - [ ] basic minimax

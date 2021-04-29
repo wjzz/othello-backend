@@ -1,9 +1,15 @@
 plugins {
     id 'java'
     id 'application'
+    id "com.adarshr.test-logger" version "3.0.0"
+    id 'othello.java-library-conventions'
 }
 
 version = '0.1'
+
+run {
+    enableAssertions = true
+}
 
 dependencies {
     implementation project(':lib')
@@ -11,4 +17,9 @@ dependencies {
 
 application {
     mainClass = 'othello.game.Game'
+}
+
+testlogger {
+    // pick a theme - mocha, standard, plain, mocha-parallel, standard-parallel or plain-parallel
+    theme 'mocha'
 }
