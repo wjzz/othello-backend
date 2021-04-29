@@ -5,7 +5,7 @@ import java.util.*;
 public class Status {
     final public List<Field> moves;
     final public int difference;
-    final public boolean is_pass;
+    final private boolean is_pass;
     final public Color winner; /* null if draw */
 
     private Status(List<Field> moves, int difference, boolean is_pass, Color winner) {

@@ -26,25 +26,24 @@ public class GameController {
         return "hello";
     }
 
-    @GetMapping("/candidates")
-    public List<Field> getCandidates(
+    // Test: http ':9000/status?pos=...........................OX......XO...........................&to_move=X'
+    @GetMapping("/status")
+    public Status getStatusOfPosition(
         @RequestParam(value = "pos", required = true) String ascii,
         @RequestParam(value = "to_move", required = true) String to_move
     ) {
-        log.warn(String.format("Got: pos=%s", ascii));
-        log.warn(String.format("Got: to_move=[%s]", to_move));
-
         assert(ascii.length() == Position.FIELDS);
         assert(to_move.equals("X") || to_move.equals("O"));
 
-        Position pos = Position.fromString(ascii, Color.valueOf(to_move));
-        List<Field> moves = pos.legalMoves();
+        Status status = Position
+          .fromString(ascii, Color.valueOf(to_move))
+          .generateStatus();
 
-        return moves;
+        return status;
     }
 
     @GetMapping("/make_move")
-    public Map<String, Object> getPositionAfterMove(
+    public String getPositionAfterMove(
         @RequestParam(value = "pos", required = true) String ascii,
         @RequestParam(value = "to_move", required = true) String to_move,
         @RequestParam(value = "move", required = true) String move
@@ -61,15 +60,11 @@ public class GameController {
             .fromString(ascii, Color.valueOf(to_move))
             .applyMove(Field.valueOf(move));
 
-        Map<String, Object> ret_values = new HashMap<>();
-        ret_values.put("pos", pos.toAscii());
-        ret_values.put("moves", pos.legalMoves());
-
-        return ret_values;
+        return pos.toAscii();
     }
 
     @GetMapping("/bot")
-    public Map<String, Object> getBotMove(
+    public String getBotMove(
         @RequestParam(value = "pos", required = true) String ascii,
         @RequestParam(value = "to_move", required = true) String to_move
     ) {
@@ -80,18 +75,8 @@ public class GameController {
         assert(to_move.equals("X") || to_move.equals("O"));
 
         Position pos = Position.fromString(ascii, Color.valueOf(to_move));
-        Status status = pos.generateStatus();
-
         Player player = new RandomPlayer("1");
-        Field move = player.bestMove(pos, status.moves);
-
-        Position final_pos = pos.applyMove(move);
-
-        Map<String, Object> ret_values = new HashMap<>();
-        ret_values.put("pos", final_pos.toAscii());
-        ret_values.put("moves", final_pos.legalMoves());
-        ret_values.put("move", move);
-
-        return ret_values;
+        Field move = player.bestMove(pos, pos.legalMoves());
+        return move.toString();
     }
 }

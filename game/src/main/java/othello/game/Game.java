@@ -2,8 +2,6 @@ package othello.game;
 
 import othello.*;
 
-import java.util.List;
-
 public class Game {
     public static void main(String[] args) {
         // Player player_1 = new RandomPlayer("1");

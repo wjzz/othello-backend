@@ -1,2 +1,2 @@
 rootProject.name = 'othello'
-include('app', 'lib', 'game')
+include(':api', ':lib', ':game')

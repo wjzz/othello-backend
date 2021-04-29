@@ -23,13 +23,12 @@ class MinimaxSpec extends Specification {
             O O O O X X X X
             O O O O X X X X
             """
-            def pos = Position.fromString(pos_str)
+            def pos = Position.fromString(pos_str, Color.X)
             def depth = 0
             def minimax = new MinimaxPlayer("test", depth)
         when:
             def evaluation = minimax.eval(pos, depth)
         then:
-            pos.to_move == Color.X
             pos.generateStatus().isGameFinished()
             evaluation == 0
    }
@@ -46,13 +45,12 @@ class MinimaxSpec extends Specification {
             O O O O X X X X
             O O O X X X X X
             """
-            def pos = Position.fromString(pos_str)
+            def pos = Position.fromString(pos_str, Color.X)
             def depth = 0
             def minimax = new MinimaxPlayer("test", depth)
         when:
             def evaluation = minimax.eval(pos, depth)
         then:
-            pos.to_move == Color.X
             pos.generateStatus().isGameFinished()
             evaluation == MinimaxPlayer.WIN_EVAL
    }
@@ -69,13 +67,12 @@ class MinimaxSpec extends Specification {
             O O O O X X X X
             O O O O O X X X
             """
-            def pos = Position.fromString(pos_str)
+            def pos = Position.fromString(pos_str, Color.X)
             def depth = 0
             def minimax = new MinimaxPlayer("test", depth)
         when:
             def evaluation = minimax.eval(pos, depth)
         then:
-            pos.to_move == Color.X
             pos.generateStatus().isGameFinished()
             evaluation == MinimaxPlayer.LOSS_EVAL
    }
@@ -92,15 +89,13 @@ class MinimaxSpec extends Specification {
             X O O O X X X X
             X X X X X X . X
             """
-            def pos = Position.fromString(pos_str)
+            def pos = Position.fromString(pos_str, Color.X)
             def depth = 0
-            pos.to_move = Color.X
             def minimax = new MinimaxPlayer("test", depth)
         when:
             def evaluation = minimax.eval(pos, depth)
         then:
             pos.generateStatus().isGameFinished()
-            pos.to_move == Color.X
             evaluation == MinimaxPlayer.WIN_EVAL
    }
 
@@ -116,15 +111,13 @@ class MinimaxSpec extends Specification {
             X O O O X X X X
             X X X X X X . X
             """
-            def pos = Position.fromString(pos_str)
+            def pos = Position.fromString(pos_str, Color.O)
             def depth = 0
-            pos.to_move = Color.O
             def minimax = new MinimaxPlayer("test", depth)
         when:
             def evaluation = minimax.eval(pos, depth)
         then:
             pos.generateStatus().isGameFinished()
-            pos.to_move == Color.O
             evaluation == MinimaxPlayer.LOSS_EVAL
    }
 }

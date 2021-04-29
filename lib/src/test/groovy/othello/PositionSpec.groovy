@@ -104,7 +104,7 @@ class PositionSpec extends Specification {
             . O X . . X O .
             """
 
-            def pos = Position.fromString(pos_str)
+            def pos = Position.fromString(pos_str, Color.X)
             def moves = pos.legalMoves().sort()
         expect:
             moves == [A1, H1, A8, H8]
@@ -123,7 +123,7 @@ class PositionSpec extends Specification {
             . . . . . . . .
             """
 
-            def pos = Position.fromString(pos_str)
+            def pos = Position.fromString(pos_str, Color.X)
             def moves = pos.legalMoves().sort()
         expect:
             moves == [A1, H1, A8, H8]
@@ -142,7 +142,7 @@ class PositionSpec extends Specification {
             O O O X O O O .
             """
 
-            def pos = Position.fromString(pos_str)
+            def pos = Position.fromString(pos_str, Color.X)
             def moves = pos.legalMoves().sort()
         expect:
             moves == [A1, H8]
@@ -161,7 +161,7 @@ class PositionSpec extends Specification {
             . . . . . . . .
             """
 
-            def pos = Position.fromString(pos_str)
+            def pos = Position.fromString(pos_str, Color.X)
             def moves = pos.legalMoves().sort()
         expect:
             moves == [A1, H1, A8, H8]
@@ -180,7 +180,7 @@ class PositionSpec extends Specification {
             . . . X . . X X
             """
 
-            def pos = Position.fromString(pos_str)
+            def pos = Position.fromString(pos_str, Color.X)
             def moves = pos.legalMoves().sort()
         expect:
             moves == [D1]
@@ -198,7 +198,7 @@ class PositionSpec extends Specification {
             . . . . . . . .
             . . . . . . . .
             """
-            def pos = Position.fromString(pos_str)
+            def pos = Position.fromString(pos_str, Color.X)
 
         when:
             def moves = pos.legalMoves().sort()
@@ -219,7 +219,7 @@ class PositionSpec extends Specification {
             . . . . . . . .
             . . . . . . . .
             """
-            def pos = Position.fromString(pos_str)
+            def pos = Position.fromString(pos_str, Color.X)
 
         when:
             def moves = pos.legalMoves().sort()
@@ -243,7 +243,7 @@ class PositionSpec extends Specification {
             . . . . . . . .
             . . . . . . . .
             """
-            def pos = Position.fromString(pos_str)
+            def pos = Position.fromString(pos_str, Color.X)
 
         when:
             pos.makeMove(D3)
@@ -278,7 +278,7 @@ class PositionSpec extends Specification {
             . . . . . . . .
             . . . . . . . .
             """
-            def pos = Position.fromString(pos_str)
+            def pos = Position.fromString(pos_str, Color.X)
 
         when:
             def status = pos.generateStatus()
@@ -301,7 +301,7 @@ class PositionSpec extends Specification {
             . . . . . . . .
             . . . . . . . .
             """
-            def pos = Position.fromString(pos_str)
+            def pos = Position.fromString(pos_str, Color.X)
 
         when:
             def status = pos.generateStatus()
@@ -325,7 +325,7 @@ class PositionSpec extends Specification {
             . . . . . . . .
             . . . . . . . .
             """
-            def pos = Position.fromString(pos_str)
+            def pos = Position.fromString(pos_str, Color.X)
 
         when:
             def status = pos.generateStatus()
