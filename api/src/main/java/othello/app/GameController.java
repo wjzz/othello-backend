@@ -54,7 +54,11 @@ public class GameController {
 
         assert(ascii.length() == Position.FIELDS);
         assert(to_move.equals("X") || to_move.equals("O"));
-        assert(move.length() == 2);
+        assert(move.equals("pass") || move.length() == 2);
+
+        if (move.equals("pass")) {
+            return ascii;
+        }
 
         Position pos = Position
             .fromString(ascii, Color.valueOf(to_move))
@@ -76,7 +80,12 @@ public class GameController {
 
         Position pos = Position.fromString(ascii, Color.valueOf(to_move));
         Player player = new RandomPlayer("1");
-        Field move = player.bestMove(pos, pos.legalMoves());
+
+        List<Field> moves = pos.legalMoves();
+        if (moves.size() == 0) {
+            return "pass";
+        }
+        Field move = player.bestMove(pos, moves);
         return move.toString();
     }
 }
