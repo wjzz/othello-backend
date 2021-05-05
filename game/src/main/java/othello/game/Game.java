@@ -1,9 +1,15 @@
 package othello.game;
 
 import othello.*;
+import othello.game.Perft;
 
 public class Game {
     public static void main(String[] args) {
+        // if (args[0].equals("pertf")) {
+        Perft.Calculate();
+    }
+
+    private static void PlayGameTop(String[] args) {
         // Player player_1 = new RandomPlayer("1");
         // Player player_1 = new SquareValuationPlayer("1");
         MinimaxPlayer player_1 = new MinimaxPlayer("depth=3", 3);
